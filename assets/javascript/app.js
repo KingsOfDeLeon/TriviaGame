@@ -1,12 +1,12 @@
 $(document).ready(function () {
     //Standard variables
-    var numMinutes = 3;
+    var numMinutes = .5;
     var display = $('.timerText');
-    if (numMinutes < 10) {
-        display.text("Time remaining: " + "0" + numMinutes + ":00");
-    } else {
-        display.text("Time remaining: " + "0" + numMinutes + ":00");
-    }
+    // if (numMinutes < 10) {
+    //     display.text("Time remaining: " + "0" + numMinutes + ":00");
+    // } else {
+    //     display.text("Time remaining: " + "0" + numMinutes + ":00");
+    // }
     var currentTimer;
 
     // ----------------------------------------------
@@ -79,13 +79,9 @@ $(document).ready(function () {
     $(".answer").on("click", function () {
         console.log($(this).attr('Correct-Answer'));
         if ($(this).attr('Correct-Answer')) {
-            getQuestion.text("You got it right!");
-            QuestionNum++;
-            stopTimer();
-            setTimeout(function () {
-                loadQuestion();
-            }, 2500);
-
+            correctAnswer();
+        } else {
+            incorrectAnswer();
         }
     });
 
@@ -107,6 +103,7 @@ $(document).ready(function () {
 
             if (--timer < 0) {
                 timer = duration;
+                incorrectAnswer();
             }
         }, 1000);
     }
@@ -122,6 +119,59 @@ $(document).ready(function () {
         clearTimeout(currentTimer);
         display.text("Get ready for the next question!");
     };
+
+    function clearAnswerText() {
+        if (currentCorrectAnswer === 0) {
+            //getAnswer1.text("");
+            getAnswer2.text("");
+            getAnswer3.text("");
+            getAnswer4.text("");
+        } else if (currentCorrectAnswer === 1) {
+            getAnswer1.text("");
+            //getAnswer2.text("");
+            getAnswer3.text("");
+            getAnswer4.text("");
+        } else if (currentCorrectAnswer === 2) {
+            getAnswer1.text("");
+            getAnswer2.text("");
+            //getAnswer3.text("");
+            getAnswer4.text("");
+        } else {
+            getAnswer1.text("");
+            getAnswer2.text("");
+            getAnswer3.text("");
+            //getAnswer4.text("");
+        }
+    };
+
+    function correctAnswer() {
+        clearAnswerText();
+        getQuestion.text("You got it right!");
+        QuestionNum++;
+        stopTimer();
+        setTimeout(function () {
+            loadQuestion();
+        }, 2000);
+    };
+
+    function incorrectAnswer() {
+        clearAnswerText();
+        if (currentCorrectAnswer === 0) {
+            getQuestion.text("correct answer was " + questionsArr[QuestionNum].answers[0]);
+        } else if (currentCorrectAnswer === 1) {
+            getQuestion.text("correct answer was " + questionsArr[QuestionNum].answers[1]);
+        } else if (currentCorrectAnswer === 2) {
+            getQuestion.text("correct answer was " + questionsArr[QuestionNum].answers[2]);
+        } else {
+            getQuestion.text("correct answer was " + questionsArr[QuestionNum].answers[3]);
+        }
+
+        QuestionNum++;
+        stopTimer();
+        setTimeout(function () {
+            loadQuestion();
+        }, 2000);
+    }
 
 
 
