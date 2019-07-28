@@ -1,6 +1,6 @@
 $(document).ready(function () {
     //Standard variables
-    var numMinutes = .5;
+    var numMinutes = .25;
     var display = $('.timerText');
     // if (numMinutes < 10) {
     //     display.text("Time remaining: " + "0" + numMinutes + ":00");
@@ -13,29 +13,29 @@ $(document).ready(function () {
     // Question objects
 
     var questionOne = {
-        question: "question one placeholder",
-        answers: ["Answer1", "Answer2", "Answer3", "Answer4"],
-        correctAnswers: 0
-    }
-    var questionTwo = {
-        question: "question two placeholder",
-        answers: ["Answer1", "Answer2", "Answer3", "Answer4"],
+        question: "In Ocarina of Time, who is the Sage of Light?",
+        answers: ["Zelda", "Rauru", "Sheik", "Ezlo"],
         correctAnswers: 1
     }
-    var questionThree = {
-        question: "question three placeholder",
-        answers: ["Answer1", "Answer2", "Answer3", "Answer4"],
-        correctAnswers: 2
-    }
-    var questionFour = {
-        question: "question four placeholder",
-        answers: ["Answer1", "Answer2", "Answer3", "Answer4"],
+    var questionTwo = {
+        question: "What is the name of the King of Hyrule the assists Link in The Wind Waker?",
+        answers: ["Daltus Gustaf Hyrule", "Harkinian Hyrule", "Nohansen Daltus Hyrule", "Daphnes Nohansen Hyrule"],
         correctAnswers: 3
     }
+    var questionThree = {
+        question: "Which of the following is NOT an enemy found in Link's Awakening?",
+        answers: ["Goomba", "Armos", "Moblin", "Poe"],
+        correctAnswers: 3
+    }
+    var questionFour = {
+        question: "From the NES to Skyward Sword, in how many Zelda series games does Link fight Ganon/Ganondorf (not including remakes, rereleases, and the CD-i games).",
+        answers: ["6", "7", "8", "9"],
+        correctAnswers: 2
+    }
     var questionFive = {
-        question: "question five placeholder",
-        answers: ["Answer1", "Answer2", "Answer3", "Answer4"],
-        correctAnswers: 0
+        question: "Who is the current producer of The Legend of Zelda series?",
+        answers: ["Koji Kondo", "Eiji Aonuma", "Shigeru Miyamoto", "Satoru Iwata"],
+        correctAnswers: 1
     }
     var questionsArr = [questionOne, questionTwo, questionThree, questionFour, questionFive];
     var getQuestion = $(".questionSpace");
@@ -45,6 +45,8 @@ $(document).ready(function () {
     var getAnswer4 = $(".answer4");
     var QuestionNum = 0;
     var currentCorrectAnswer;
+    var numCorrect = 0;
+    var numWrong = 0;
     //getQuestion.text(questionsArr[0].question);
     loadQuestion();
 
@@ -136,11 +138,17 @@ $(document).ready(function () {
             getAnswer2.text("");
             //getAnswer3.text("");
             getAnswer4.text("");
-        } else {
+        } else if (currentCorrectAnswer === 3) {
             getAnswer1.text("");
             getAnswer2.text("");
             getAnswer3.text("");
             //getAnswer4.text("");
+        } else {
+            getQuestion.text("Game Over!");
+            getAnswer1.text("Hit Refresh to Play Again!");
+            getAnswer2.text("");
+            getAnswer3.text("number correct: " + numCorrect + "!");
+            getAnswer4.text("number wrong: " + numWrong + "!");
         }
     };
 
@@ -148,7 +156,12 @@ $(document).ready(function () {
         clearAnswerText();
         getQuestion.text("You got it right!");
         QuestionNum++;
+        numCorrect++;
         stopTimer();
+        if (QuestionNum >= questionsArr.length) {
+            gameOver();
+            return;
+        }
         setTimeout(function () {
             loadQuestion();
         }, 2000);
@@ -165,13 +178,24 @@ $(document).ready(function () {
         } else {
             getQuestion.text("correct answer was " + questionsArr[QuestionNum].answers[3]);
         }
-
         QuestionNum++;
+        numWrong++;
         stopTimer();
+        if (QuestionNum >= questionsArr.length) {
+            gameOver();
+            return;
+        }
         setTimeout(function () {
             loadQuestion();
         }, 2000);
-    }
+    };
+
+    function gameOver() {
+        currentCorrectAnswer = -1;
+        display.text("Thank you for playing!");
+        clearAnswerText();
+
+    };
 
 
 
