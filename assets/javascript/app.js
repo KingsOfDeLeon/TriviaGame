@@ -1,12 +1,10 @@
 $(document).ready(function () {
-    //Standard variables
+    //scaler used to get number of minutes. 1 = 60 seconds
     var numMinutes = .25;
+    //grabs timer text
     var display = $('.timerText');
-    // if (numMinutes < 10) {
-    //     display.text("Time remaining: " + "0" + numMinutes + ":00");
-    // } else {
-    //     display.text("Time remaining: " + "0" + numMinutes + ":00");
-    // }
+
+    //var used to kill the timer
     var currentTimer;
 
     // ----------------------------------------------
@@ -37,20 +35,26 @@ $(document).ready(function () {
         answers: ["Koji Kondo", "Eiji Aonuma", "Shigeru Miyamoto", "Satoru Iwata"],
         correctAnswers: 1
     }
+    //question array
     var questionsArr = [questionOne, questionTwo, questionThree, questionFour, questionFive];
+    //grabs html space elements
     var getQuestion = $(".questionSpace");
     var getAnswer1 = $(".answer1");
     var getAnswer2 = $(".answer2");
     var getAnswer3 = $(".answer3");
     var getAnswer4 = $(".answer4");
+    //used to iterate through question array
     var QuestionNum = 0;
+    //correct answer selector/flag
     var currentCorrectAnswer;
+    //score variables
     var numCorrect = 0;
     var numWrong = 0;
-    //getQuestion.text(questionsArr[0].question);
+
+    //question load up on page load up
     loadQuestion();
 
-
+    //loads questions and answers in appropriate space. Also gives the intended answer a correct-answer flag
     function loadQuestion() {
         callTimer(numMinutes);
         getAnswer1.removeAttr("Correct-Answer");
@@ -72,25 +76,30 @@ $(document).ready(function () {
         } else {
             getAnswer4.attr("Correct-Answer", true);
         }
+        //used for testing/grading
         console.log("is getAnswer1 correct? " + getAnswer1.attr("Correct-Answer"));
         console.log("is getAnswer2 correct? " + getAnswer2.attr("Correct-Answer"));
         console.log("is getAnswer3 correct? " + getAnswer3.attr("Correct-Answer"));
         console.log("is getAnswer4 correct? " + getAnswer4.attr("Correct-Answer"));
     };
 
+    //Click event on answer space only
     $(".answer").on("click", function () {
         console.log($(this).attr('Correct-Answer'));
         if ($(this).attr('Correct-Answer')) {
+            //grats, you got the correct answer. Handle appropriately
             correctAnswer();
         } else {
+            //you got it wrong. Handle appropriately
             incorrectAnswer();
         }
     });
 
-
+    //Starts the timer
     function startTimer(duration, display) {
         var timer = duration,
             minutes, seconds;
+        //puts timer interval in a variable to be used when timer needs to stop
         currentTimer = setInterval(function () {
             minutes = parseInt(timer / 60, 10)
             seconds = parseInt(timer % 60, 10);
@@ -101,27 +110,31 @@ $(document).ready(function () {
             if (seconds < 10) {
                 seconds = '0' + seconds;
             }
+            //displays timer
             display.text("Time remaining: " + minutes + ":" + seconds);
 
             if (--timer < 0) {
+                //You ran out of time
                 timer = duration;
                 incorrectAnswer();
             }
         }, 1000);
     }
 
+    //function used to call the timer and grab timer text
     function callTimer(numMinutes) {
         var time = 60 * numMinutes,
             display = $('.timerText');
         startTimer(time, display);
     };
-
+    //kills timer
     function stopTimer() {
         display = $('.timerText');
         clearTimeout(currentTimer);
         display.text("Get ready for the next question!");
     };
 
+    //remove wrong answers
     function clearAnswerText() {
         if (currentCorrectAnswer === 0) {
             //getAnswer1.text("");
@@ -144,11 +157,13 @@ $(document).ready(function () {
             getAnswer3.text("");
             //getAnswer4.text("");
         } else {
+            //display game over text
+            display.text("Thank you for playing!");
             getQuestion.text("Game Over!");
-            getAnswer1.text("Hit Refresh to Play Again!");
+            getAnswer1.text("Hit Refresh If You Want to Try Again.");
             getAnswer2.text("");
-            getAnswer3.text("number correct: " + numCorrect + "!");
-            getAnswer4.text("number wrong: " + numWrong + "!");
+            getAnswer3.text("You got " + numCorrect + " right!");
+            getAnswer4.text("And  " + numWrong + " wrong!");
         }
     };
 
@@ -160,6 +175,7 @@ $(document).ready(function () {
         stopTimer();
         if (QuestionNum >= questionsArr.length) {
             gameOver();
+            //stop game
             return;
         }
         setTimeout(function () {
@@ -183,6 +199,7 @@ $(document).ready(function () {
         stopTimer();
         if (QuestionNum >= questionsArr.length) {
             gameOver();
+            //stop game
             return;
         }
         setTimeout(function () {
@@ -191,8 +208,8 @@ $(document).ready(function () {
     };
 
     function gameOver() {
+        //-1 flag needed to get to gameover text
         currentCorrectAnswer = -1;
-        display.text("Thank you for playing!");
         clearAnswerText();
 
     };
